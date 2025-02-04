@@ -5,7 +5,7 @@ from datetime import datetime
 
 # 作者與程式資訊
 __title__ = "檔案與資料夾掃描工具"
-__author__ = "張晟(CJhang)"
+__author__ = "CJhang"
 __version__ = "1.0.0 (2025/01/24)"
 __description__ = "檔案與資料夾掃描工具"
 
