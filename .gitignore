@@ -1,7 +1,25 @@
-/build
-/dist
-/myenv
-/ScanFilesFolders.exe
-/ScanFilesFolders.spec
-/scan_results_20250124_145140.csv
-/scan_results_20250124_152211.csv
+# Python 虛擬環境
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 系統檔案
+.DS_Store
+Thumbs.db
+
+# 編譯與打包相關(PyInstaller 等)
+dist/
+build/
+*.egg-info/
+*.spec
+
+# IDE 設定
+.vscode/
+.idea/
+
+# 日誌與輸出
+*.log
+*.csv
+scan_results_*.csv
