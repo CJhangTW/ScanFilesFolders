@@ -3,6 +3,18 @@ import csv
 import sys
 from datetime import datetime
 
+# 定義 CSV 欄位名稱常數，避免重複定義相同字面值
+CSV_FIELDNAMES = [
+    'Type',
+    'Name',
+    'Extension',
+    'Size (bytes)',
+    'Path',
+    'File Count',
+    'Total Size (bytes)',
+    'Last Modified'
+]
+
 # 作者與程式資訊
 __title__ = "檔案與資料夾掃描工具"
 __author__ = "CJhang"
@@ -18,6 +30,13 @@ def show_program_info():
     print(f"描述：{__description__}")
     print("=" * 50)
     print()
+
+def create_default_record():
+    """
+    根據 CSV_FIELDNAMES 建立一個預設記錄字典，
+    所有欄位的初始值皆為 None。
+    """
+    return {field: None for field in CSV_FIELDNAMES}
 
 def scan_directory(root_dir):
     results = []
@@ -54,40 +73,38 @@ def process_directory(folder_path, directory):
             if os.path.isfile(file_path):
                 total_size += os.path.getsize(file_path)
                 file_count += 1
-
-    return {
+    last_modified = datetime.fromtimestamp(os.path.getmtime(folder_path)).strftime('%Y-%m-%d %H:%M:%S')
+    
+    # 利用輔助函式建立預設記錄，然後更新需要的欄位
+    record = create_default_record()
+    record.update({
         'Type': 'Folder',
         'Name': directory,
-        'Extension': None,
-        'Size (bytes)': None,
         'Path': folder_path,
         'File Count': file_count,
         'Total Size (bytes)': total_size,
-        'Last Modified': datetime.fromtimestamp(os.path.getmtime(folder_path)).strftime('%Y-%m-%d %H:%M:%S')
-    }
+        'Last Modified': last_modified
+    })
+    return record
 
 def process_file(file_path, file):
-    return {
+    last_modified = datetime.fromtimestamp(os.path.getmtime(file_path)).strftime('%Y-%m-%d %H:%M:%S')
+    
+    record = create_default_record()
+    record.update({
         'Type': 'File',
         'Name': os.path.splitext(file)[0],
         'Extension': os.path.splitext(file)[1],
         'Size (bytes)': os.path.getsize(file_path),
         'Path': file_path,
-        'File Count': None,
-        'Total Size (bytes)': None,
-        'Last Modified': datetime.fromtimestamp(os.path.getmtime(file_path)).strftime('%Y-%m-%d %H:%M:%S')
-    }
+        'Last Modified': last_modified
+    })
+    return record
 
 def save_to_csv(data, output_file):
-    # 定義所有可能的欄位
-    fieldnames = [
-        'Type', 'Name', 'Extension', 'Size (bytes)', 'Path',
-        'File Count', 'Total Size (bytes)', 'Last Modified'
-    ]
-    
-    # 儲存結果到 CSV
+    # 使用 CSV_FIELDNAMES 常數來定義欄位名稱
     with open(output_file, mode='w', newline='', encoding='utf-8-sig') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDNAMES)
         writer.writeheader()
         writer.writerows(data)
 
@@ -97,9 +114,9 @@ if __name__ == "__main__":
     
     # 判斷當前執行的目錄（解決 _MEIxxxx 打包問題）
     if getattr(sys, 'frozen', False):
-        current_dir = os.path.dirname(sys.executable)  # 如果是打包後的環境
+        current_dir = os.path.dirname(sys.executable)
     else:
-        current_dir = os.path.dirname(os.path.abspath(__file__))  # 開發環境
+        current_dir = os.path.dirname(os.path.abspath(__file__))
 
     # 格式化當前時間為檔名的一部分
     current_time = datetime.now().strftime('%Y%m%d_%H%M%S')
