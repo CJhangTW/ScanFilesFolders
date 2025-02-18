@@ -44,7 +44,6 @@
 
 - **程式名稱：** 檔案與資料夾掃描工具
 - **作者：** [CJhang](https://cjhang.com/)
-- **版本：** 1.0.1 (2025/02/18)
 - **描述：** 掃描指定目錄下的所有檔案與資料夾資訊，並將結果儲存成 CSV 檔。
 - **GitHub 連結：** [https://github.com/CJhangTW/ScanFilesFolders](https://github.com/CJhangTW/ScanFilesFolders)
 
