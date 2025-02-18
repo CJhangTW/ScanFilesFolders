@@ -2,6 +2,7 @@ import os
 import csv
 import sys
 from datetime import datetime
+import requests
 
 # 定義 CSV 欄位名稱常數，避免重複定義相同字面值
 CSV_FIELDNAMES = [
@@ -18,8 +19,9 @@ CSV_FIELDNAMES = [
 # 作者與程式資訊
 __title__ = "檔案與資料夾掃描工具"
 __author__ = "CJhang"
-__version__ = "1.0.0 (2025/01/24)"
+__version__ = "1.0.1 (2025/02/18)"
 __description__ = "檔案與資料夾掃描工具"
+__repo_url__ = "https://github.com/CJhangTW/ScanFilesFolders"
 
 def show_program_info():
     """顯示程式相關資訊"""
@@ -28,8 +30,23 @@ def show_program_info():
     print(f"作者：{__author__}")
     print(f"版本：{__version__}")
     print(f"描述：{__description__}")
+    print(f"專案網址：{__repo_url__}")
     print("=" * 50)
     print()
+
+def check_for_updates():
+    """檢查是否有新版本"""
+    repo_url = "https://api.github.com/repos/CJhangTW/ScanFilesFolders/releases/latest"
+    try:
+        response = requests.get(repo_url)
+        response.raise_for_status()
+        latest_version = response.json()["tag_name"]
+        if latest_version != __version__:
+            print(f"有新版本可用：{latest_version}，請前往更新。")
+        else:
+            print("目前已是最新版本。")
+    except requests.RequestException as e:
+        print(f"檢查更新時發生錯誤：{e}")
 
 def create_default_record():
     """
@@ -111,6 +128,9 @@ def save_to_csv(data, output_file):
 if __name__ == "__main__":
     # 顯示程式資訊
     show_program_info()
+    
+    # 檢查是否有新版本
+    check_for_updates()
     
     # 判斷當前執行的目錄（解決 _MEIxxxx 打包問題）
     if getattr(sys, 'frozen', False):
