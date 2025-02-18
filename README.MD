@@ -1,5 +1,9 @@
 # 檔案與資料夾掃描工具
 
+![Python Version](https://img.shields.io/badge/python-3.6%2B-blue)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/CJhangTW/ScanFilesFolders)
+![License](https://img.shields.io/github/license/CJhangTW/ScanFilesFolders)
+
 本工具為一個用於掃描指定目錄下所有檔案與資料夾資訊的小工具，並將掃描結果儲存成 CSV 檔。程式內建功能包含計算資料夾內所有檔案的大小、檔案數量，並展示檔案的名稱、大小、路徑、最後修改時間等資訊。
 
 ---
@@ -40,8 +44,9 @@
 
 - **程式名稱：** 檔案與資料夾掃描工具
 - **作者：** [CJhang](https://cjhang.com/)
-- **版本：** 1.0.0 (2025/01/24)
+- **版本：** 1.0.1 (2025/02/18)
 - **描述：** 掃描指定目錄下的所有檔案與資料夾資訊，並將結果儲存成 CSV 檔。
+- **GitHub 連結：** [https://github.com/CJhangTW/ScanFilesFolders](https://github.com/CJhangTW/ScanFilesFolders)
 
 ---
 
