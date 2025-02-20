@@ -39,7 +39,7 @@ jobs:
 
     - name: Convert Python script to EXE
       run: |
-        pyinstaller --onefile --noconsole your_script.py
+        pyinstaller --onefile --noconsole ScanFilesFolders.py
       shell: cmd
 
     - name: Upload EXE artifact
