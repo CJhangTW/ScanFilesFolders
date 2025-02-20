@@ -1,0 +1,60 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Build and Release EXE
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write  # 允許上傳 Release 資料
+
+jobs:
+  build:
+
+    runs-on: windows-latest  # 在 Windows 環境執行
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4  # 取得你的專案程式碼
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Convert Python script to EXE
+      run: |
+        pyinstaller --onefile --noconsole your_script.py
+      shell: cmd
+
+    - name: Upload EXE artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: built-exe
+        path: dist/your_script.exe  # PyInstaller 預設輸出路徑
+
+    - name: Upload to Latest Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/your_script.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # - name: Test with pytest
+    #   run: |
+    #     pytest
