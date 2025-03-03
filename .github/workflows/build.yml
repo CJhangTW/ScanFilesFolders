@@ -1,0 +1,56 @@
+name: Build and Release EXE
+
+on:
+  push:
+    branches:
+      - "main"   # main 分支 push 時執行（只打包，不發佈 Release）
+    tags:
+      - "v*.*.*" # 當推送 vX.Y.Z tag 時，執行並發佈 Release
+
+permissions:
+  contents: write  # 允許上傳 Release 資料
+
+jobs:
+  build:
+    runs-on: windows-latest  # 在 Windows 環境執行
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4  # 取得你的專案程式碼
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: pip install pyinstaller
+
+    - name: Convert Python script to EXE
+      run: pyinstaller --onefile --noconsole ScanFilesFolders.py
+      shell: cmd
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: built-exe
+        path: dist/ScanFilesFolders.exe  # PyInstaller 產生的檔案名稱
+
+  release:
+    needs: build  # 這個 Job 依賴於 build Job，確保 exe 先被打包
+    if: startsWith(github.ref, 'refs/tags/v')  # 只有當 tag push 時才執行
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: built-exe
+        path: dist
+
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/ScanFilesFolders.exe  # 確保名稱正確
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
