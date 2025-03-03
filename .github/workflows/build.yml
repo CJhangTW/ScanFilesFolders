@@ -2,10 +2,8 @@ name: Build and Release EXE
 
 on:
   push:
-    branches:
-      - "main"           # main 分支 push 時執行
     tags:
-      - "v*.*.*"         # 當推送 vX.Y.Z tag 時，執行並發佈 Release
+      - "v*.*.*"         # 僅在推送符合 vX.Y.Z 格式的 tag 時執行
 
 permissions:
   contents: write        # 允許上傳 Release 資料
@@ -38,8 +36,6 @@ jobs:
 
   release:
     needs: build
-    # 當 push 事件發生在 main 分支或 tag 時都進行發佈
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
@@ -58,6 +54,7 @@ jobs:
         body: "Windows 最新版本自動發佈"
         draft: false
         prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Asset to Release
       uses: softprops/action-gh-release@v2
