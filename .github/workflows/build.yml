@@ -25,7 +25,7 @@ jobs:
       run: pip install pyinstaller
 
     - name: Convert Python script to EXE
-      run: pyinstaller --onefile --noconsole --clean ScanFilesFolders.py
+      run: pyinstaller --onefile --noconsole --clean --hidden-import=requests ScanFilesFolders.py
       shell: cmd
 
     - name: Upload artifact
