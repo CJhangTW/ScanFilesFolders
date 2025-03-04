@@ -19,7 +19,7 @@ CSV_FIELDNAMES = [
 # 作者與程式資訊
 __title__ = "檔案與資料夾掃描工具"
 __author__ = "CJhang"
-__version__ = "v1.0.3"
+__version__ = "v1.0.5"
 __description__ = "檔案與資料夾掃描工具"
 __repo_url__ = "https://github.com/CJhangTW/ScanFilesFolders"
 

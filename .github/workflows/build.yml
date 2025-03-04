@@ -22,10 +22,13 @@ jobs:
         python-version: "3.9"
 
     - name: Install dependencies
-      run: pip install pyinstaller
+      run: pip install -r requirements.txt
+
+    - name: Check installed packages
+      run: pip freeze
 
     - name: Convert Python script to EXE
-      run: pyinstaller --onefile --noconsole --clean --hidden-import=requests ScanFilesFolders.py
+      run: pyinstaller --onefile --noconsole --clean --collect-all requests ScanFilesFolders.py
       shell: cmd
 
     - name: Upload artifact
